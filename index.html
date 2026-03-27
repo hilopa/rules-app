@@ -12,6 +12,7 @@
             --button-color: var(--tg-theme-button-color, #248bed);
             --button-text: var(--tg-theme-button-text-color, #ffffff);
             --secondary-bg: var(--tg-theme-secondary-bg-color, #f4f4f5);
+            --accent-green: #34c759;
         }
 
         body {
@@ -19,101 +20,130 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 24px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 90vh;
+            min-height: 100vh;
             overflow: hidden;
+        }
+
+        /* Эффект свечения на фоне */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: var(--button-color);
+            filter: blur(100px);
+            opacity: 0.15;
+            top: 10%;
+            z-index: -1;
         }
 
         .card {
             background-color: var(--secondary-bg);
-            padding: 24px;
-            border-radius: 20px;
+            padding: 30px 24px;
+            border-radius: 28px;
             width: 100%;
-            max-width: 320px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 340px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             text-align: center;
-            animation: fadeIn 0.5s ease-out;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        h2 { margin: 0 0 12px; font-size: 22px; font-weight: 600; }
-        p { color: var(--hint-color); font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+        h2 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+        p { color: var(--hint-color); font-size: 15px; line-height: 1.4; margin-bottom: 30px; }
 
         .rules-list {
             text-align: left;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-        .rule-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .rule-icon {
-            margin-right: 12px;
-            font-size: 18px;
+            margin-bottom: 35px;
+            background: rgba(0,0,0,0.03);
+            padding: 15px;
+            border-radius: 18px;
         }
 
-        /* Кнопка "Я не бот" */
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .rule-item:last-child { margin-bottom: 0; }
+
+        .rule-icon {
+            margin-right: 12px;
+            background: var(--bg-color);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+
         #captcha-container {
-            position: relative;
-            height: 60px;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .verify-btn {
-            background-color: var(--button-color);
+            background: linear-gradient(135deg, var(--button-color), #50a7f9);
             color: var(--button-text);
             border: none;
-            padding: 14px 32px;
-            border-radius: 14px;
+            padding: 16px;
+            border-radius: 16px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
             width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(36, 139, 237, 0.3);
         }
 
-        .verify-btn:active { transform: scale(0.96); opacity: 0.9; }
+        .verify-btn:active { transform: scale(0.97); }
 
-        /* Галочка после проверки */
         .success-mark {
             display: none;
-            color: #34c759;
-            font-size: 40px;
-            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--accent-green);
+            font-size: 48px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes scaleIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h2>Правила сообщества</h2>
-        <p>Для вступления в чат, пожалуйста, подтвердите согласие с правилами.</p>
+        <h2>Привет! 👋</h2>
+        <p>Чтобы разблокировать возможность писать в чате, подтверди правила.</p>
 
         <div class="rules-list">
-            <div class="rule-item"><span class="rule-icon">🛡️</span> Без спама и рекламы</div>
-            <div class="rule-item"><span class="rule-icon">🤝</span> Взаимное уважение</div>
-            <div class="rule-item"><span class="rule-icon">🚫</span> Без мата и политики</div>
+            <div class="rule-item"><span class="rule-icon">🛡️</span> <span>Без спама и рекламных ссылок</span></div>
+            <div class="rule-item"><span class="rule-icon">🤝</span> <span>Уважительное общение с игроками</span></div>
+            <div class="rule-item"><span class="rule-icon">🚫</span> <span>Запрещены мат и политика</span></div>
         </div>
 
         <div id="captcha-container">
-            <button class="verify-btn" id="main-btn" onclick="startVerify()">Проверить меня</button>
+            <button class="verify-btn" id="main-btn" onclick="startVerify()">Я всё прочитал(а)</button>
             <div class="success-mark" id="success">✓</div>
         </div>
     </div>
@@ -123,36 +153,27 @@
         tg.ready();
         tg.expand();
 
-        // Настройка главной кнопки Telegram (внизу экрана)
-        const mainButton = tg.MainButton;
-        mainButton.setText("ПРИНЯТЬ И ВОЙТИ");
-        mainButton.offClick(sendDataToBot);
-        mainButton.onClick(sendDataToBot);
-
         function startVerify() {
             const btn = document.getElementById('main-btn');
             const success = document.getElementById('success');
             
-            // Имитация быстрой проверки "на бота"
-            btn.style.display = 'none';
-            success.style.display = 'block';
-            
-            // Включаем нижнюю нативную кнопку Telegram
-            mainButton.show();
-            
-            // Легкая вибрация телефона (Haptic Feedback)
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.notificationOccurred('success');
-            }
-        }
+            // Визуальный отклик
+            btn.style.opacity = '0';
+            setTimeout(() => {
+                btn.style.display = 'none';
+                success.style.display = 'block';
+                
+                // Вибрация устройства
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
 
-        function sendDataToBot() {
-            tg.sendData("rules_accepted");
-            tg.close();
+                // Закрываем приложение через 800мс
+                setTimeout(() => {
+                    tg.close();
+                }, 800);
+            }, 200);
         }
-        function sendDataToBot() {
-    tg.close();
-}
     </script>
 </body>
 </html>
