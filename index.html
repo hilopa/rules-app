@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --button-color: var(--tg-theme-button-color, #248bed);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f4f4f5);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            overflow: hidden;
+        }
+
+        .card {
+            background-color: var(--secondary-bg);
+            padding: 24px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        h2 { margin: 0 0 12px; font-size: 22px; font-weight: 600; }
+        p { color: var(--hint-color); font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+
+        .rules-list {
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .rule-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .rule-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        /* Кнопка "Я не бот" */
+        #captcha-container {
+            position: relative;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .verify-btn {
+            background-color: var(--button-color);
+            color: var(--button-text);
+            border: none;
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            width: 100%;
+        }
+
+        .verify-btn:active { transform: scale(0.96); opacity: 0.9; }
+
+        /* Галочка после проверки */
+        .success-mark {
+            display: none;
+            color: #34c759;
+            font-size: 40px;
+            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Правила сообщества</h2>
+        <p>Для вступления в чат, пожалуйста, подтвердите согласие с правилами.</p>
+
+        <div class="rules-list">
+            <div class="rule-item"><span class="rule-icon">🛡️</span> Без спама и рекламы</div>
+            <div class="rule-item"><span class="rule-icon">🤝</span> Взаимное уважение</div>
+            <div class="rule-item"><span class="rule-icon">🚫</span> Без мата и политики</div>
+        </div>
+
+        <div id="captcha-container">
+            <button class="verify-btn" id="main-btn" onclick="startVerify()">Проверить меня</button>
+            <div class="success-mark" id="success">✓</div>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        // Настройка главной кнопки Telegram (внизу экрана)
+        const mainButton = tg.MainButton;
+        mainButton.setText("ПРИНЯТЬ И ВОЙТИ");
+        mainButton.offClick(sendDataToBot);
+        mainButton.onClick(sendDataToBot);
+
+        function startVerify() {
+            const btn = document.getElementById('main-btn');
+            const success = document.getElementById('success');
+            
+            // Имитация быстрой проверки "на бота"
+            btn.style.display = 'none';
+            success.style.display = 'block';
+            
+            // Включаем нижнюю нативную кнопку Telegram
+            mainButton.show();
+            
+            // Легкая вибрация телефона (Haptic Feedback)
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.notificationOccurred('success');
+            }
+        }
+
+        function sendDataToBot() {
+            tg.sendData("rules_accepted");
+            tg.close();
+        }
+    </script>
+</body>
+</html>
